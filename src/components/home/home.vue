@@ -5,7 +5,7 @@
     </div>
     <div id="leftBar">
         <div class="content">
-            <el-collapse v-model="activeNames" @change="handleChange">
+            <el-collapse v-model="activeNames" @change="handleChange" id="navBar">
                 <el-collapse-item v-for="(item,index) in oneList"
                 :title="item.permissionDesc"
                 :key="index"
@@ -22,6 +22,9 @@
                 </el-collapse-item>
             </el-collapse>
         </div>
+    </div>
+    <div id="rightContent">
+        <router-view></router-view>
     </div>
   </div>
 </template>
@@ -46,14 +49,13 @@ export default {
         for(var i=0;i<ev.length;i++){
             if(ev[i]==="系统管理"){
                 this.data = this.systemList;
-                console.log(this.data)
             }else if(ev[i]==='彩票管理'){
                 this.data = this.lotteryList;
             }else{
                 this.data = []
             }
         }
-    }
+    },
   },
   created() {
     var permissions = this.response.permissions
@@ -94,7 +96,14 @@ export default {
         top: 7%;
         left: 0;
         bottom: 0;
-        background: rgba($color: black, $alpha: .4);
+        background: rgba($color: rgb(95, 94, 94), $alpha: .4);
+    }
+    #rightContent{
+        width: 80%;
+        position: absolute;
+        top: 7%;
+        right: 0;
+        bottom: 0;
     }
     .content{
         width: 100%;
@@ -102,7 +111,7 @@ export default {
         margin-top: 50px;
     }
     .el-collapse{
-        opacity: 0.7;
+        opacity: .6;
     }
     ul{
         width: 100%;

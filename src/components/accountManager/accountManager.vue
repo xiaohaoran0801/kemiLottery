@@ -29,7 +29,7 @@
                     <el-input v-model="updataUserInfo.username"></el-input>
                   </el-form-item>
                   <el-form-item label="密码">
-                    <el-input v-model="updataUserInfo.password"></el-input>
+                    <el-input type="passwprd" v-model="updataUserInfo.password"></el-input>
                   </el-form-item>
                   <el-form-item label="用户角色">
                     <template>
@@ -64,7 +64,7 @@
                 <el-input v-model="userInfo.username"></el-input>
               </el-form-item>
               <el-form-item label="密码">
-                <el-input v-model="userInfo.password"></el-input>
+                <el-input type="passwprd" v-model="userInfo.password"></el-input>
               </el-form-item>
               <el-form-item label="用户角色">
                 <template>

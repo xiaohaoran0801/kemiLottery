@@ -2,7 +2,10 @@ import Vue from "vue"
 Vue.mixin({
     data(){
         return{
-                 
+            response: JSON.parse(localStorage.getItem("response")),
+            oneList:[],     
+            systemList:[],     
+            lotteryList:[],    
         }
     },
     methods: {
@@ -33,5 +36,18 @@ Vue.mixin({
                 });
             });
         },
+        permissionCategory(){
+            var permissions = permissions || this.response.permissions;
+            var length = permissions.length
+            for(let i=0;i<length;i++){
+                if(permissions[i].sortNum===0){
+                    this.oneList.push(permissions[i])
+                }else if(permissions[i].sortNum===1){
+                    this.systemList.push(permissions[i])
+                }else if(permissions[i].sortNum===2){
+                    this.lotteryList.push(permissions[i])
+                }
+            }
+        }
     }
 })

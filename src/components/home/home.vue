@@ -32,10 +32,6 @@
 export default {
   data() {
     return {
-        response: JSON.parse(localStorage.getItem("response")),
-        oneList : [],
-        systemList : [],
-        lotteryList : [],
         data:[],
         activeNames: []
     };
@@ -58,18 +54,7 @@ export default {
     },
   },
   created() {
-    var permissions = this.response.permissions
-    var length = permissions.length
-    for(let i=0;i<length;i++){
-        if(permissions[i].sortNum===0){
-            this.oneList.push(permissions[i])
-        }else if(permissions[i].sortNum===1){
-            this.systemList.push(permissions[i])
-        }else if(permissions[i].sortNum===2){
-            this.lotteryList.push(permissions[i])
-        }
-    }
-    
+      this.permissionCategory()
   }
 };
 </script>
@@ -109,6 +94,8 @@ export default {
         width: 100%;
         color: lightgray;
         margin-top: 50px;
+        padding-left: 15px;
+        background: rgba($color: white, $alpha: .8)
     }
     .el-collapse{
         opacity: .6;

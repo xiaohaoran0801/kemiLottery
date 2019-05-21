@@ -6,7 +6,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './utils/myaxios'
 import './apis/apis'
-Vue.use(ElementUI);
+import './mixins'
+Vue.use(ElementUI,{size:'mini'});
 
 Vue.config.productionTip = false
 router.beforeEach((to,from,next)=>{

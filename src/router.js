@@ -17,7 +17,25 @@ export default new Router({
     {
       path: '/home',
       name: 'home',
-      component: () => import(/* webpackChunkName: "home" */ '@/components/home/home')
+      component: () => import(/* webpackChunkName: "home" */ '@/components/home/home'),
+      children:[
+        {
+          path:'RoleManage',name:'RoleManage',
+          component:()=>import(/* webpackChunkName: "RoleManage" */ '@/components/RoleManage/RoleManage')
+        },
+        {
+          path:'accountManager',name:'accountManager',
+          component:()=>import(/* webpackChunkName: "accountManager" */ '@/components/accountManager/accountManager')
+        },
+        {
+          path:'PermissionManage',name:'PermissionManage',
+          component:()=>import(/* webpackChunkName: "PermissionManage" */ '@/components/PermissionManage/PermissionManage')
+        },
+        {
+          path:'LotteryList',name:'LotteryList',
+          component:()=>import(/* webpackChunkName: "LotteryList" */ '@/components/LotteryList/LotteryList')
+        },
+      ]
     }
   ]
 })

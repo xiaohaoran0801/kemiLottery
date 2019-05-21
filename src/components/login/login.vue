@@ -3,11 +3,11 @@
        <div id="usersInfo">
             <h1>可 米 彩 票</h1>
             <el-form :model="userInfo" :rules="rules" status-icon ref="userInfo">
-                <el-form-item placeholder="请输入用户名" prop="accountName" style="width:250px">
-                    <el-input v-model="userInfo.accountName"></el-input>
+                <el-form-item prop="accountName" style="width:250px">
+                    <el-input v-model="userInfo.accountName" placeholder="请输入用户名"></el-input>
                 </el-form-item>
-                <el-form-item placeholder="请输入密码" prop="password">
-                    <el-input v-model="userInfo.password"></el-input>
+                <el-form-item prop="password">
+                    <el-input v-model="userInfo.password" placeholder="请输入密码"></el-input>
                 </el-form-item>
             </el-form>
             <el-button type="primary" @click="login">登录</el-button>
@@ -32,15 +32,16 @@ export default {
     },
     methods:{
         login(){
-            console.log(this.$apis)
             this.$refs['userInfo'].validate((valid)=>{
                 if(valid){
                     this.$http.post(this.$apis.signin,this.userInfo)
                     .then((resp)=>{
-                        console.log(resp)
-                        var token = resp.data.token
+                        resp = resp.data
+                        var token = resp.token
                         localStorage.setItem("token",token);
-                        if(resp.data.success){
+                        var response = JSON.stringify(resp.response)
+                        localStorage.setItem("response",response);
+                        if(resp.success){
                             var query = this.$route.query
                             if(!query.redirect){
                                 this.$router.push({path:"/home"})

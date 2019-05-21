@@ -5,7 +5,6 @@ import apis from '@/apis/apis'
 
 Vue.use(Vuex)
 const loadAction = (commit,payload,mutationName)=>{
-  console.log(payload)
   axios.get(payload.api,{pageNo:payload.pageNo,pageSize:payload.pageSize})
   .then((resp)=>{
     resp = resp.data;
@@ -22,6 +21,9 @@ export default new Vuex.Store({
   getters:{
     allRoles(state){
       return state.allRoles
+    },
+    allUsers(state){
+      return state.allUsers
     }
   },
   mutations: {
@@ -29,7 +31,7 @@ export default new Vuex.Store({
       state.allRoles = payload.allRoles
     },
     LOADALLUSER(state,payload){
-      state.allRoles = payload.allRoles
+      state.allUsers = payload.allUsers
     },
   },
   actions: {
@@ -39,7 +41,7 @@ export default new Vuex.Store({
     },
     loadAllUser({commit},payload={}){
         payload.api = apis.findAllUsers
-      loadAction(commit,payload,'LOADALLROLE')
+      loadAction(commit,payload,'LOADALLUSER')
     },
   }
 })

@@ -1,29 +1,40 @@
 <template>
   <div id="home">
-    <div id="topBar">
-      <el-button type="danger" @click="logout">注销</el-button>
-    </div>
     <div id="leftBar">
         <div class="content">
-            <el-collapse v-model="activeNames" @change="handleChange" id="navBar">
-                <el-collapse-item v-for="(item,index) in oneList"
-                :title="item.permissionDesc"
-                :key="index"
-                :name="item.permissionDesc"
-                >
-                <ul>
-                    <li v-for="(ele,key) in data"
-                        :key="key"
-                        @click="pushView(ele)"
-                    >
-                    {{ele.permissionDesc}}
-                    </li>
-                </ul>
-                </el-collapse-item>
-            </el-collapse>
+            <el-col id="leftNav">
+                <el-menu
+                    class="el-menu-vertical-demo"
+                    @open="handleOpen"
+                    @close="handleClose"
+                    background-color="#353636"
+                    text-color="#fff"
+                    active-text-color="#ffd04b">
+                    <el-submenu 
+                    v-for="(item,index) in oneList" 
+                    :index="item.permissionDesc" 
+                    :key="index">
+                        <template slot="title">
+                            <i class="el-icon-location"></i>
+                            <span>{{item.permissionDesc}}</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item 
+                                v-for="(ele,key) in data"
+                                :index="ele.permissionDesc"
+                                :key="key"
+                                @click="pushView(ele)"
+                            >{{ele.permissionDesc}}</el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+            </el-col>
         </div>
     </div>
     <div id="rightContent">
+        <div id="topBar">
+            <el-button type="danger" @click="logout">注销</el-button>
+        </div>
         <router-view></router-view>
     </div>
   </div>
@@ -33,7 +44,6 @@ export default {
   data() {
     return {
         data:[],
-        activeNames: []
     };
   },
   methods: {
@@ -41,17 +51,18 @@ export default {
       localStorage.clear();
       this.$router.push({ name: "login" });
     },
-    handleChange(ev){
-        for(var i=0;i<ev.length;i++){
-            if(ev[i]==="系统管理"){
-                this.data = this.systemList;
-            }else if(ev[i]==='彩票管理'){
-                this.data = this.lotteryList;
-            }else{
-                this.data = []
-            }
+    handleOpen(key, keyPath) {
+        if(key==='系统管理'){
+            this.data = this.systemList;
+        }else if(key==='彩票管理'){
+            this.data = this.lotteryList;
+        }else{
+            this.data = []
         }
-    },
+      },
+      handleClose(key,keyPath){
+        //   console.log(key,keyPath)
+      }
   },
   created() {
       this.permissionCategory()
@@ -62,12 +73,11 @@ export default {
     #home {
         width: 100%;
         height: 100%;
-        background: url('../../assets/bg.jpg')
+        background: url('../../assets/bg.jpg');
     }
     #topBar {
         width: 100%;
-        height: 7%;
-        background: url("../../assets/navBar.jpg");
+        height: 50px;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -78,34 +88,27 @@ export default {
         width: 20%;
         min-width: 260px;
         position: absolute;
-        top: 7%;
+        top: 0;
         left: 0;
         bottom: 0;
-        background: rgba($color: rgb(95, 94, 94), $alpha: .4);
+        background: rgb(53, 54, 54);
     }
     #rightContent{
         width: 80%;
         position: absolute;
-        top: 7%;
+        top: 0;
         right: 0;
         bottom: 0;
+        left: 270px;
+        padding: 30px;
+        box-sizing: border-box;
     }
     .content{
         width: 100%;
-        color: lightgray;
-        margin-top: 50px;
-        padding-left: 15px;
-        background: rgba($color: white, $alpha: .8)
-    }
-    .el-collapse{
-        opacity: .6;
-    }
-    ul{
-        width: 100%;
-        list-style: none;
-        li{
+        padding-top: 30px;
+        box-sizing: border-box;
+        #leftNav{
             width: 100%;
-            height: 40px;
         }
     }
 </style>

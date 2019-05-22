@@ -17,32 +17,28 @@
               <el-button type="primary" size="mini" @click="handleClose2(item)">编辑</el-button>
               <el-button type="danger" size="mini" @click="deleteRole(item._id)">删除</el-button>
             </td>
-            <el-dialog
-                        title="提示"
-                        :visible.sync="show"
-                        width="30%"
-                        :before-close="handleClose2">
-                        <div>
-                            <el-form label-width="80px" :model="editRoleInfo">
-                                <el-form-item label="角色名称">
-                                    <el-input v-model="editRoleInfo.roleName"></el-input>
-                                </el-form-item>
-                                <el-form-item label="角色权限">
-                                     <el-tree
-                                    :props="props"
-                                    :load="loadNode"
-                                    lazy
-                                    show-checkbox
-                                    ref="treeTwo"
-                                    default-expand-all
-                                    ></el-tree>
-                                </el-form-item>
-                            </el-form>
-                        </div>
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="handleClose2">取 消</el-button>
-                            <el-button type="primary" @click="editRole">确 定</el-button>
-                        </span>
+            <el-dialog title="提示" :visible.sync="show" width="30%" :before-close="handleClose2">
+              <div>
+                <el-form label-width="80px" :model="editRoleInfo">
+                  <el-form-item label="角色名称">
+                    <el-input v-model="editRoleInfo.roleName"></el-input>
+                  </el-form-item>
+                  <el-form-item label="角色权限">
+                    <el-tree
+                      :props="props"
+                      :load="loadNode"
+                      lazy
+                      show-checkbox
+                      ref="treeTwo"
+                      default-expand-all
+                    ></el-tree>
+                  </el-form-item>
+                </el-form>
+              </div>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="handleClose2">取 消</el-button>
+                <el-button type="primary" @click="editRole">确 定</el-button>
+              </span>
             </el-dialog>
           </tr>
         </table>
@@ -54,7 +50,10 @@
         </el-button>
         <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
           <div>
-            <el-form label-width="80px" :model="roleInfo" :rules="rules" :refs="roleInfo">
+            <el-form label-width="80px" 
+            :model="roleInfo" 
+            :rules="rules" 
+            ref="roleInfo">
               <el-form-item label="角色名称" prop="roleName">
                 <el-input v-model="roleInfo.roleName"></el-input>
               </el-form-item>
@@ -83,27 +82,26 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from 'vuex'
 export default {
   data() {
     return {
-      dialogVisible: false,
       show: false,
       allPermission: [],
-      permissions:[],
+      permissions: [],
       roleInfo: {},
       editRoleInfo: {},
       props: {
         label: "name",
         children: ""
       },
-      rules:{
-        roleName:[
-            {required:true,message:"角色名称不能为空",trigger:'blur'}
+      rules: {
+        roleName: [
+          { required: true, message: "角色名称不能为空", trigger: "blur" }
         ],
-        roleDesc:[
-            {required:true,message:"角色描述不能为空",trigger:'blur'},
-        ],
+        roleDesc: [
+          { required: true, message: "角色描述不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -114,11 +112,11 @@ export default {
     editRole() {
       var nameArr = this.$refs.treeTwo.getCheckedNodes();
       for (let i = 0; i < nameArr.length; i++) {
-          var name = nameArr[i].name
-        for(let j=0;j<this.allPermission.length;j++){
-            if(this.allPermission[j].permissionDesc === name){
-                this.permissions.push(this.allPermission[j])
-            }
+        var name = nameArr[i].name;
+        for (let j = 0; j < this.allPermission.length; j++) {
+          if (this.allPermission[j].permissionDesc === name) {
+            this.permissions.push(this.allPermission[j]);
+          }
         }
       }
       this.editRoleInfo.permissions = this.permissions;
@@ -139,35 +137,34 @@ export default {
       this.operatorConfirm("删除角色", action);
     },
     addNewRole() {
-      var nameArr = this.$refs.tree.getCheckedNodes();
-          for (let i = 0; i < nameArr.length; i++) {
-              var name = nameArr[i].name
-            for(let j=0;j<this.allPermission.length;j++){
-                if(this.allPermission[j].permissionDesc === name){
-                    this.permissions.push(this.allPermission[j])
+      this.$refs['roleInfo'].validate((valid) => {
+        if (valid) {
+            var nameArr = this.$refs.tree.getCheckedNodes();
+            for (let i = 0; i < nameArr.length; i++) {
+              var name = nameArr[i].name;
+              for (let j = 0; j < this.allPermission.length; j++) {
+                if (this.allPermission[j].permissionDesc === name) {
+                  this.permissions.push(this.allPermission[j]);
                 }
+              }
             }
-      }
-      this.roleInfo.permissions = this.permissions;
-      this.handleClose();
-          this.post(this.$apis.addNewRole, this.roleInfo).then(() => {
-            this.permissions = [];
-            this.$store.dispatch("loadAllRole");
-          });
-      this.$refs['roleInfo'].validate((valid)=>{
-        if(valid){
-          
-        }else{
-           console.log("验证失败")
-        }
-      })
+            this.roleInfo.permissions = this.permissions;
+            this.handleClose();
+            this.post(this.$apis.addNewRole, this.roleInfo).then(() => {
+              this.permissions = [];
+              this.$store.dispatch("loadAllRole");
+            });
+          }else{
+              return false;
+          }
+      });
     },
     handleClose() {
       this.dialogVisible = !this.dialogVisible;
     },
-    handleClose2(item){
-        this.editRoleInfo = item;
-        this.show = !this.show;
+    handleClose2(item) {
+      this.editRoleInfo = item;
+      this.show = !this.show;
     },
     loadNode(node, resolve) {
       if (node.level === 0) {
@@ -226,7 +223,7 @@ export default {
       resp = resp.data;
       this.allPermission = resp.allPermission;
       var permissions = this.allPermission;
-      this.permissionCategory()
+      this.permissionCategory();
     });
   }
 };

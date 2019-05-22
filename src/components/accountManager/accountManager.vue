@@ -89,12 +89,11 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import {mapGetters} from 'vuex'
 export default {
   data() {
     return {
         show:false,
-        dialogVisible: false,
         userInfo: {
             roles: []
         },

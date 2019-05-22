@@ -16,7 +16,7 @@ export default new Vuex.Store({
   state: {
     allRoles:[],
     allUsers:[],
-    gameList:[],
+    allPermission:[],
   },
   getters:{
     allRoles(state){
@@ -24,6 +24,9 @@ export default new Vuex.Store({
     },
     allUsers(state){
       return state.allUsers
+    },
+    allPermission(state){
+      return state .allPermission
     }
   },
   mutations: {
@@ -32,6 +35,9 @@ export default new Vuex.Store({
     },
     LOADALLUSER(state,payload){
       state.allUsers = payload.allUsers
+    },
+    LOADALLPERMISSION(state,payload){
+      state.allPermission = payload.allPermission
     },
   },
   actions: {
@@ -42,6 +48,10 @@ export default new Vuex.Store({
     loadAllUser({commit},payload={}){
         payload.api = apis.findAllUsers
       loadAction(commit,payload,'LOADALLUSER')
+    },
+    loadAllPermission({commit},payload={}){
+        payload.api = apis.showAllPermission
+      loadAction(commit,payload,'LOADALLPERMISSION')
     },
   }
 })

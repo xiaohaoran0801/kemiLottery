@@ -5,7 +5,8 @@ Vue.mixin({
             response: JSON.parse(localStorage.getItem("response")),
             oneList:[],     
             systemList:[],     
-            lotteryList:[],    
+            lotteryList:[],  
+            dialogVisible:false,  
         }
     },
     methods: {

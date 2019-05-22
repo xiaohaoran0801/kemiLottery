@@ -11,16 +11,16 @@
                     text-color="#fff"
                     active-text-color="#ffd04b">
                     <el-submenu 
-                    v-for="(item,index) in oneList" 
+                    v-for="(item,index) in list" 
                     :index="item.permissionDesc" 
                     :key="index">
                         <template slot="title">
-                            <i class="el-icon-location"></i>
+                            <i class="el-icon-s-unfold"></i>
                             <span>{{item.permissionDesc}}</span>
                         </template>
                         <el-menu-item-group>
                             <el-menu-item 
-                                v-for="(ele,key) in data"
+                                v-for="(ele,key) in item.children"
                                 :index="ele.permissionDesc"
                                 :key="key"
                                 @click="pushView(ele)"
@@ -52,20 +52,29 @@ export default {
       this.$router.push({ name: "login" });
     },
     handleOpen(key, keyPath) {
-        if(key==='系统管理'){
-            this.data = this.systemList;
-        }else if(key==='彩票管理'){
-            this.data = this.lotteryList;
-        }else{
-            this.data = []
-        }
-      },
-      handleClose(key,keyPath){
-        //   console.log(key,keyPath)
-      }
+        
+    },
+    handleClose(key,keyPath){
+    
+    }
   },
   created() {
-      this.permissionCategory()
+      var permissions = permissions || this.response.permissions;
+        var length = permissions.length
+        for(let i=0;i<length;i++){
+            var parentId = permissions[i].parentid
+            if(parentId===0){
+                permissions[i].children = [];
+                this.list.push(permissions[i]);
+            }else{
+                for(var j=0;j<this.list.length;j++){
+                    var id = this.list[j]._id
+                    if(parentId === id){
+                        this.list[j].children.push(permissions[i])
+                    }
+                }
+            }
+        }
   }
 };
 </script>
@@ -73,7 +82,8 @@ export default {
     #home {
         width: 100%;
         height: 100%;
-        background: url('../../assets/bg.jpg');
+        background: url('../../assets/bg.jpg') no-repeat;
+        background-size: over;
     }
     #topBar {
         width: 100%;

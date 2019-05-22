@@ -14,22 +14,25 @@
             <td>{{item.roleDesc}}</td>
             <td></td>
             <td>
-              <el-button type="primary" size="mini" @click="handleClose2(item)">编辑</el-button>
+              <el-button type="primary" size="mini" @click="update(item)">编辑</el-button>
               <el-button type="danger" size="mini" @click="deleteRole(item._id)">删除</el-button>
             </td>
             <el-dialog title="提示" :visible.sync="show" width="30%" :before-close="handleClose2">
               <div>
-                <el-form label-width="80px" :model="editRoleInfo">
-                  <el-form-item label="角色名称">
-                    <el-input v-model="editRoleInfo.roleName"></el-input>
+                <el-form label-width="80px" 
+                  :model="newRoleInfo" 
+                  ref="newRoleInfo"
+                  :rules="rules">
+                  <el-form-item label="角色名称" prop="roleName">
+                    <el-input v-model="newRoleInfo.roleName"></el-input>
                   </el-form-item>
                   <el-form-item label="角色权限">
                     <el-tree
-                      :props="props"
-                      :load="loadNode"
+                      :props="props2"
+                      :load="loadNode2"
                       lazy
                       show-checkbox
-                      ref="treeTwo"
+                      ref="two"
                       default-expand-all
                     ></el-tree>
                   </el-form-item>
@@ -37,61 +40,27 @@
               </div>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="handleClose2">取 消</el-button>
-                <el-button type="primary" @click="editRole">确 定</el-button>
+                <el-button type="primary" @click="updateRoleInfo">确 定</el-button>
               </span>
             </el-dialog>
           </tr>
         </table>
       </template>
-      <div class="addBTN">
-        <el-button type="primary" size="mini" @click="handleClose">
-          <i class="el-icon-plus"></i>
-          新增
-        </el-button>
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
-          <div>
-            <el-form label-width="80px" 
-            :model="roleInfo" 
-            :rules="rules" 
-            ref="roleInfo">
-              <el-form-item label="角色名称" prop="roleName">
-                <el-input v-model="roleInfo.roleName"></el-input>
-              </el-form-item>
-              <el-form-item label="角色描述" prop="roleDesc">
-                <el-input v-model="roleInfo.roleDesc"></el-input>
-              </el-form-item>
-              <el-form-item label="角色权限">
-                <el-tree
-                  :props="props"
-                  :load="loadNode"
-                  lazy
-                  show-checkbox
-                  ref="tree"
-                  default-expand-all
-                ></el-tree>
-              </el-form-item>
-            </el-form>
-          </div>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addNewRole">确 定</el-button>
-          </span>
-        </el-dialog>
-      </div>
+      <addNewRole/>
     </div>
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from "vuex";
+import addNewRole from "./addNewRole";
 export default {
+  components: { addNewRole },
   data() {
     return {
-      show: false,
-      allPermission: [],
       permissions: [],
-      roleInfo: {},
-      editRoleInfo: {},
-      props: {
+      show: false,
+      newRoleInfo: {},
+      props2: {
         label: "name",
         children: ""
       },
@@ -99,33 +68,36 @@ export default {
         roleName: [
           { required: true, message: "角色名称不能为空", trigger: "blur" }
         ],
-        roleDesc: [
-          { required: true, message: "角色描述不能为空", trigger: "blur" }
-        ]
       }
     };
   },
   computed: {
-    ...mapGetters(["allRoles"])
+    ...mapGetters(["allRoles", "allPermission"])
   },
   methods: {
-    editRole() {
-      var nameArr = this.$refs.treeTwo.getCheckedNodes();
-      for (let i = 0; i < nameArr.length; i++) {
-        var name = nameArr[i].name;
-        for (let j = 0; j < this.allPermission.length; j++) {
-          if (this.allPermission[j].permissionDesc === name) {
-            this.permissions.push(this.allPermission[j]);
+    updateRoleInfo() {
+      var rs = this.$refs["newRoleInfo"]
+      rs[0].validate(valid => {
+        if (valid) {
+          var result = this.$refs.two[0]
+          var nameArr = result.getCheckedNodes();
+          for (let i = 0; i < nameArr.length; i++) {
+            var name = nameArr[i].name;
+            for (let j = 0; j < this.allPermission.length; j++) {
+              if (this.allPermission[j].permissionDesc === name) {
+                this.permissions.push(this.allPermission[j]);
+              }
+            }
           }
+          this.newRoleInfo.permissions = this.permissions;
+          this.handleClose2();
+          this.post(this.$apis.updateRoleInfo, this.newRoleInfo).then(() => {
+            this.permissions = [];
+            this.$store.dispatch("loadAllRole");
+          });
+        } else {
+          return false;
         }
-      }
-      this.editRoleInfo.permissions = this.permissions;
-      this.post(this.$apis.updateRoleInfo, {
-        id: this.editRoleInfo._id,
-        permissions: this.editRoleInfo.permissions
-      }).then(() => {
-        this.permissions = [];
-        this.$store.dispatch("loadAllRole");
       });
     },
     deleteRole(id) {
@@ -136,54 +108,30 @@ export default {
       };
       this.operatorConfirm("删除角色", action);
     },
-    addNewRole() {
-      this.$refs['roleInfo'].validate((valid) => {
-        if (valid) {
-            var nameArr = this.$refs.tree.getCheckedNodes();
-            for (let i = 0; i < nameArr.length; i++) {
-              var name = nameArr[i].name;
-              for (let j = 0; j < this.allPermission.length; j++) {
-                if (this.allPermission[j].permissionDesc === name) {
-                  this.permissions.push(this.allPermission[j]);
-                }
-              }
-            }
-            this.roleInfo.permissions = this.permissions;
-            this.handleClose();
-            this.post(this.$apis.addNewRole, this.roleInfo).then(() => {
-              this.permissions = [];
-              this.$store.dispatch("loadAllRole");
-            });
-          }else{
-              return false;
-          }
-      });
-    },
-    handleClose() {
-      this.dialogVisible = !this.dialogVisible;
-    },
-    handleClose2(item) {
-      this.editRoleInfo = item;
+    update(item){
+      this.newRoleInfo = item;
       this.show = !this.show;
     },
-    loadNode(node, resolve) {
+    handleClose2() {
+      this.show = !this.show;
+    },
+    loadNode2(node, resolve) {
       if (node.level === 0) {
         let listOne = [];
-        for (let i = 0; i < this.oneList.length; i++) {
+        for (let i = 0; i < this.allPermission.length; i++) {
           let obj = new Object();
-          let name = this.oneList[i].permissionDesc;
+          let name = this.allPermission[i].permissionDesc;
           obj.name = name;
           listOne.push(obj);
         }
+        this.tempList = listOne;
         return resolve(listOne);
       }
       if (node.level > 3) return resolve([]);
-
       var hasChild;
       var secondChild;
       if (node.data.name === "系统管理") {
         hasChild = true;
-        secondChild = false;
       } else if (node.data.name === "彩票管理") {
         secondChild = true;
       } else {
@@ -191,19 +139,25 @@ export default {
       }
       setTimeout(() => {
         var data;
+        var listOne = this.tempList;
         let listTwo = [];
-        for (let i = 0; i < this.systemList.length; i++) {
-          let obj = new Object();
-          let name = this.systemList[i].permissionDesc;
-          obj.name = name;
-          listTwo.push(obj);
-        }
         let listThree = [];
-        for (let j = 0; j < this.lotteryList.length; j++) {
-          let obj = new Object();
-          let name = this.lotteryList[j].permissionDesc;
-          obj.name = name;
-          listThree.push(obj);
+        var systemList = this.allPermission[0].children;
+        var lotteryList = this.allPermission[1].children;
+        for (let i = 0; i < listOne.length; i++) {
+          if (listOne[i].name === "系统管理") {
+            for (var j = 0; j < systemList.length; j++) {
+              let obj1 = new Object();
+              obj1.name = systemList[j].permissionDesc;
+              listTwo.push(obj1);
+            }
+          } else if (listOne[i].name === "彩票管理") {
+            for (var k = 0; k < lotteryList.length; k++) {
+              let obj2 = new Object();
+              obj2.name = lotteryList[k].permissionDesc;
+              listThree.push(obj2);
+            }
+          }
         }
         if (hasChild) {
           data = listTwo;
@@ -212,19 +166,13 @@ export default {
         } else {
           data = [];
         }
-
         resolve(data);
       }, 500);
     }
   },
   mounted() {
     this.$store.dispatch("loadAllRole");
-    this.$http.get(this.$apis.showAllPermission).then(resp => {
-      resp = resp.data;
-      this.allPermission = resp.allPermission;
-      var permissions = this.allPermission;
-      this.permissionCategory();
-    });
+    this.$store.dispatch("loadAllPermission");
   }
 };
 </script>
@@ -237,13 +185,6 @@ export default {
   width: 100%;
   padding: 50px 0;
   box-sizing: border-box;
-}
-.addBTN {
-  width: 95%;
-  padding: 30px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: flex-end;
 }
 table {
   width: 90%;

@@ -1,21 +1,22 @@
 <template>
     <div id="PermissionManage">
-         <el-collapse v-model="activeNames" @change="handleChange" id="navBar">
-            <el-collapse-item v-for="(item,index) in oneList"
-            :title="item.permissionDesc"
-            :key="index"
-            :name="item.permissionDesc"
-            >
-            <ul>
-                <li v-for="(ele,key) in data"
-                    :key="key"
+        <template>
+            <el-tabs tab-position="left" style="height: 200px;background:white;border-radius: 5px">
+                <el-tab-pane :label="item.permissionDesc"
+                v-for="(item,index) in allPermission"
+                :key='index'
                 >
-                <span>{{ele.permissionDesc}}</span>
-                <el-button type="danger" @click="deletePermission(ele)">删除</el-button>
-                </li>
-            </ul>
-            </el-collapse-item>
-        </el-collapse>
+                    <ul>
+                        <li v-for="(ele,key) in item.children"
+                            :key="key"
+                        >
+                            {{ele.permissionDesc}}
+                            <el-button type="danger" @click="deletePermission(ele)">删除</el-button>
+                        </li>
+                    </ul>
+                </el-tab-pane>
+            </el-tabs>
+        </template>
         <div id="addBTN">
             <el-button type="primary" @click="handleClose">
                 <i class="el-icon-plus"></i>
@@ -124,7 +125,9 @@ export default {
         }
     },
     mounted(){
-        this.permissionCategory()
+        this.$store.dispatch('loadAllPermission')
+        // this.permissionCategory()
+        console.log(this.allPermission)
     }
 }
 </script>
@@ -134,17 +137,13 @@ export default {
         height: 100%;
         padding: 30px;
         box-sizing: border-box;
-        .el-collapse{
-            width: 90%;
-            margin: 20px;
-            ul{
-                list-style: none;
-                li{
-                    height: 48px;
-                    display: flex;
-                    justify-content: space-around;
-                    align-items: center;
-                }
+        ul{
+            list-style: none;
+            li{
+                height: 48px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
             }
         }
         #addBTN{

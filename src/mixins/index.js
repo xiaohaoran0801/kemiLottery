@@ -3,10 +3,8 @@ Vue.mixin({
     data(){
         return{
             response: JSON.parse(localStorage.getItem("response")),
-            oneList:[],     
-            systemList:[],     
-            lotteryList:[],  
-            dialogVisible:false,  
+            list:[],      
+            dialogVisible:false, 
         }
     },
     methods: {
@@ -38,15 +36,20 @@ Vue.mixin({
             });
         },
         permissionCategory(){
-            var permissions = permissions || this.response.permissions;
+            var permissions = this.response.permissions
             var length = permissions.length
             for(let i=0;i<length;i++){
-                if(permissions[i].sortNum===0){
-                    this.oneList.push(permissions[i])
-                }else if(permissions[i].sortNum===1){
-                    this.systemList.push(permissions[i])
-                }else if(permissions[i].sortNum===2){
-                    this.lotteryList.push(permissions[i])
+                var parentId = permissions[i].parentid
+                if(parentId===0){
+                    permissions[i].children = [];
+                    this.list.push(permissions[i]);
+                }else{
+                    for(var j=0;j<this.list.length;j++){
+                        var id = this.list[j]._id
+                        if(parentId === id){
+                            this.list[j].children.push(permissions[i])
+                        }
+                    }
                 }
             }
         }

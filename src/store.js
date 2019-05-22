@@ -11,12 +11,12 @@ const loadAction = (commit,payload,mutationName)=>{
     commit(mutationName,resp)
   })
 }
-
 export default new Vuex.Store({
   state: {
     allRoles:[],
     allUsers:[],
     allPermission:[],
+    allGames:[]
   },
   getters:{
     allRoles(state){
@@ -26,8 +26,11 @@ export default new Vuex.Store({
       return state.allUsers
     },
     allPermission(state){
-      return state .allPermission
-    }
+      return state.allPermission
+    },
+    allGames(state){
+      return state.allGames
+    },
   },
   mutations: {
     LOADALLROLE(state,payload){
@@ -37,7 +40,29 @@ export default new Vuex.Store({
       state.allUsers = payload.allUsers
     },
     LOADALLPERMISSION(state,payload){
-      state.allPermission = payload.allPermission
+      var permissions = payload.allPermission
+      var length = permissions.length
+      var list = [];
+      for(let i=0;i<length;i++){
+          var parentId = permissions[i].parentid
+          if(parentId===0){
+              permissions[i].children = [];
+              list.push(permissions[i]);
+          }else{
+              for(var j=0;j<list.length;j++){
+                  var id = list[j]._id
+                  if(parentId === id){
+                      list[j].children.push(permissions[i])
+                  }
+              }
+          }
+      }
+      payload.list = list
+      state.allPermission = payload.list
+    },
+    LOADALLGAMES(state,payload){
+      var games = payload.data[0].games
+      state.allGames = games
     },
   },
   actions: {
@@ -52,6 +77,10 @@ export default new Vuex.Store({
     loadAllPermission({commit},payload={}){
         payload.api = apis.showAllPermission
       loadAction(commit,payload,'LOADALLPERMISSION')
+    },
+    loadAllGames({commit},payload={}){
+        payload.api = apis.findAllGames
+      loadAction(commit,payload,'LOADALLGAMES')
     },
   }
 })

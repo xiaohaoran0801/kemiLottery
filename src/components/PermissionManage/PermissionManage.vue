@@ -125,9 +125,7 @@ export default {
         }
     },
     mounted(){
-        this.$store.dispatch('loadAllPermission')
-        // this.permissionCategory()
-        console.log(this.allPermission)
+        this.$store.dispatch('loadAllPermission')   
     }
 }
 </script>

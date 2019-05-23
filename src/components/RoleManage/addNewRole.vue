@@ -148,7 +148,7 @@ export default {
         }
     },
     mounted(){
-    this.$store.dispatch("loadAllPermission");
+        this.$store.dispatch("loadAllPermission");
   }
 }
 </script>

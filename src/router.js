@@ -35,6 +35,10 @@ export default new Router({
           path: 'LotteryList', name: 'LotteryList',
           component: () => import(/* webpackChunkName: "LotteryList" */ '@/components/LotteryList/LotteryList')
         },
+        {
+          path: 'ssq', name: 'ssq',
+          component: () => import(/* webpackChunkName: "ssq" */ '@/components/ssq/ssq')
+        },
       ]
     }
   ]

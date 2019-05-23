@@ -9,7 +9,7 @@ Vue.mixin({
     },
     methods: {
         pushView(item) {
-            var name = item.permissionName
+            var name = item.permissionName || item
             this.$router.push({name:name,query:item.query,params:item.params})
         },
         post(url, params) {
@@ -35,23 +35,5 @@ Vue.mixin({
                 });
             });
         },
-        permissionCategory(){
-            var permissions = this.response.permissions
-            var length = permissions.length
-            for(let i=0;i<length;i++){
-                var parentId = permissions[i].parentid
-                if(parentId===0){
-                    permissions[i].children = [];
-                    this.list.push(permissions[i]);
-                }else{
-                    for(var j=0;j<this.list.length;j++){
-                        var id = this.list[j]._id
-                        if(parentId === id){
-                            this.list[j].children.push(permissions[i])
-                        }
-                    }
-                }
-            }
-        }
     }
 })

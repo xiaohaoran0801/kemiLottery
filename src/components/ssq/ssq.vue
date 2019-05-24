@@ -1,6 +1,6 @@
 <template>
     <div id="ssq">
-        <table>
+        <table ref="table">
             <tr style="background:rgb(240, 188, 188)">
                 <th>期号</th>
                 <th v-for="item in 33"
@@ -15,9 +15,11 @@
                 <td v-for="(ele,key) in item.missNumber.general"
                     :key="key"
                     :class="[key+1>33?ele>0?'':'blue':ele>0?'':'red']"
+                    :ref="[key+1>33?ele>0?'':'blue':'']"
                 >{{ele>0?ele:key+1>33?key+1-33:key+1}}</td>
             </tr>
         </table>
+        <canvas id="canvas" ref="canvas"></canvas>
         <el-pagination
             background
             layout="prev, pager, next"
@@ -42,11 +44,36 @@ export default {
             .then((resp)=>{
                 resp = resp.data.data
                 this.data = resp.data
+                this.canvas()
             })
         },
         changeData(ev){
             this.loadData(ev,20)
         },
+        canvas(){
+            this.$nextTick(()=>{
+                var table = this.$refs['table'];
+                var canvas = this.$refs['canvas'];
+                var blueBalls = this.$refs['blue'];
+                console.log([table])
+                canvas.width = table.clientWidth;
+                canvas.height = table.clientHeight;
+                canvas.style.zIndex = 1000;
+                
+                var ctx = canvas.getContext('2d');
+                var x = blueBalls[0].offsetLeft;
+                var y = blueBalls[0].offsetTop;
+                var height = blueBalls[0].clientHeight;
+                var width = blueBalls[0].clientWidth;
+                ctx.moveTo(x+width/2,y+height/2);
+                for(var i=1;i<=blueBalls.length-1;i++){
+                    ctx.lineTo(blueBalls[i].offsetLeft+width/2,blueBalls[i].offsetTop+height/2);
+                }
+                ctx.strokeStyle = "blue";
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            })    
+        }
     },
     mounted(){
         this.loadData(1,20)
@@ -56,7 +83,6 @@ export default {
 <style lang="scss" scoped>
     #ssq{
         width: 100%;
-        height: 100%;
     }
     table{
         background: white;
@@ -88,5 +114,11 @@ export default {
         position: absolute;
         bottom: 15px;
         left: 20px
+    }
+    #canvas{
+        margin: 0 auto;
+        position: absolute;
+        top: 55px;
+        left: 15px;
     }
 </style>

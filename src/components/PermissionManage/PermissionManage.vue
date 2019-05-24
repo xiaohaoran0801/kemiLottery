@@ -102,9 +102,16 @@ export default {
             }
         },
         deletePermission(ele){
-            // var action = ()=>{
-            //     this.post(this.$apis.deletePermission,{})
-            // }
+            var action = ()=>{
+                this.post(this.$apis.deletePermission,{}).then(()=>{
+                    this.handleClose();
+                    this.$message.success('删除权限成功');
+                    this.$store.dispatch('loadAllPermission');
+                }).catch(()=>{
+                    this.$message.error('对不起,删除失败,请检查服务器')
+                })
+            }
+            this.operatorConfirm("删除权限",action)
         },
         handleClose(){
             this.dialogVisible = !this.dialogVisible

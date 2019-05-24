@@ -105,8 +105,8 @@ export default {
                 return resolve(listOne);
             }
             if (node.level > 3) return resolve([]);
-            var hasChild;
-            var secondChild;
+                var hasChild;
+                var secondChild;
             if (node.data.name === "系统管理") {
                 hasChild = true;
             } else if (node.data.name === "彩票管理") {
@@ -124,15 +124,15 @@ export default {
                 for (let i = 0; i < listOne.length; i++) {
                 if(listOne[i].name==="系统管理"){
                     for(var j=0;j<systemList.length;j++){
-                    let obj1 = new Object();
-                    obj1.name = systemList[j].permissionDesc
-                    listTwo.push(obj1)
+                        let obj1 = new Object();
+                        obj1.name = systemList[j].permissionDesc
+                        listTwo.push(obj1)
                     }
                 }else if(listOne[i].name==="彩票管理"){
                     for(var k=0;k<lotteryList.length;k++){
-                        let obj2 = new Object();
-                        obj2.name = lotteryList[k].permissionDesc
-                        listThree.push(obj2)
+                            let obj2 = new Object();
+                            obj2.name = lotteryList[k].permissionDesc
+                            listThree.push(obj2)
                         }
                     }
                 }

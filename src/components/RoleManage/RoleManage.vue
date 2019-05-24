@@ -1,7 +1,7 @@
 <template>
   <div id="RoleManage">
     <div id="allRoles">
-      <template>
+      <div id="roleList">
         <table>
           <tr>
             <th>角色名称</th>
@@ -45,7 +45,7 @@
             </el-dialog>
           </tr>
         </table>
-      </template>
+      </div>
       <addNewRole/>
     </div>
   </div>
@@ -180,25 +180,27 @@ export default {
 <style lang="scss" scoped>
 #RoleManage {
   width: 100%;
-  height: 100%;
 }
 #allRoles {
   width: 100%;
   padding: 50px 0;
   box-sizing: border-box;
 }
+#roleList{
+  background: #fff;
+  border-radius: 5px;
+}
 table {
-  width: 90%;
+  width: 100%;
   border-collapse: collapse;
   margin: 0 auto;
   text-align: center;
-  background: white;
   tr {
     height: 50px;
   }
   td,
   th {
-    border: 1px solid #cad9ea;
+    border-bottom: 1px solid #cad9ea;
     color: #666;
     height: 30px;
   }

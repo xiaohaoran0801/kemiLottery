@@ -3,7 +3,7 @@ const productionGzipExtensions = ['js', 'css'];
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const isProduction = process.env.NODE_ENV === 'production';
 module.exports = {
-    // publicPath:'./',
+    publicPath:'./',
     configureWebpack: config => {
         if (isProduction) {
              config.plugins.push(new CompressionWebpackPlugin({

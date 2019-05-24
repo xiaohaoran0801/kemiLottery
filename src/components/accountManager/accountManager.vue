@@ -1,7 +1,7 @@
 <template>
   <div id="accountManage">
     <div id="allUsers">
-      <template>
+      <div id="userList">
         <table>
           <tr>
             <th>账号名</th>
@@ -51,7 +51,7 @@
             </el-dialog>
           </tr>
         </table>
-      </template>
+      </div>
       <addNewUser/>
     </div>
   </div>
@@ -126,25 +126,27 @@ export default {
 <style lang="scss" scoped>
 #accountManage {
   width: 100%;
-  height: 100%;
 }
 #allUsers {
   width: 100%;
   padding: 50px 0;
   box-sizing: border-box;
 }
+#userList{
+  background: white;
+  border-radius: 5px;
+}
 table {
-  width: 90%;
+  width: 100%;
   border-collapse: collapse;
   margin: 0 auto;
   text-align: center;
-  background: white;
   tr {
     height: 50px;
   }
   td,
   th {
-    border: 1px solid #cad9ea;
+    border-bottom: 1px solid #cad9ea;
     color: #666;
     height: 30px;
   }

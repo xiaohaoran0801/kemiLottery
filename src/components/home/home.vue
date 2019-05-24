@@ -35,7 +35,11 @@
         <div id="topBar">
             <el-button type="danger" @click="logout">注销</el-button>
         </div>
-        <router-view></router-view>
+        <transition 
+            mode="out-in"
+            name="el-fade-in">
+            <router-view></router-view>
+        </transition>
     </div>
   </div>
 </template>
@@ -83,7 +87,7 @@ export default {
         width: 100%;
         height: 100%;
         background: url('../../assets/bg.jpg') no-repeat;
-        background-size: over;
+        background-size: 100%;
     }
     #topBar {
         width: 100%;

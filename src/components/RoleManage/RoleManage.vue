@@ -93,6 +93,7 @@ export default {
           this.handleClose2();
           this.post(this.$apis.updateRoleInfo, this.newRoleInfo).then(() => {
             this.permissions = [];
+            this.$message.success("更新角色信息成功")
             this.$store.dispatch("loadAllRole");
           });
         } else {

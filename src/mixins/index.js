@@ -9,7 +9,7 @@ Vue.mixin({
     },
     methods: {
         pushView(item) {
-            var name = item.permissionName || item
+            var name = item.name
             this.$router.push({name:name,query:item.query,params:item.params})
         },
         post(url, params) {

@@ -7,8 +7,8 @@
                         v-for="(item,index) in allGames"
                         :key="index"
                     >
-                        <div class="icon" @click="pushView(item.en)">
-                            <img :src="item.icon2" alt="">
+                        <div class="icon" @click="pushView({name:item.en})">
+                            <img :src="baseUrl+item.icon2" alt="">
                         </div>
                         <span>{{item.cn}}</span>
                     </li>
@@ -60,7 +60,7 @@
                             <img v-if="iconUrl2" :src="iconUrl2" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <span style="margin-left:10px">只能上传大小为80*80的图片</span>
+                        <span style="margin-left:10px">只能上传大小为90*90的图片</span>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -77,6 +77,7 @@ import axios from 'axios'
 export default {
     data(){
         return{
+            baseUrl:'http://localhost:3000',
             iconUrl:'',
             iconUrl2:'',
             success:false,
@@ -134,7 +135,7 @@ export default {
             })
         },
         beforeAvatarUpload2(file){ 
-            this.judgment(80,80,file).then((resp)=>{
+            this.judgment(90,90,file).then((resp)=>{
                 if(resp){
                     this.iconUrl2 = URL.createObjectURL(resp);
                     var file2 = resp
@@ -192,10 +193,14 @@ export default {
                     justify-content: center;
                     align-items: center;
                     .icon,.addNew{
-                        width: 80px;
-                        height: 80px;
+                        width: 90px;
+                        height: 90px;
                         border-radius: 50%;
                         border: 2px dashed lightgray;
+                        overflow: hidden;
+                        img{
+                            width: 100%
+                        }
                     }
                     .addNew{
                         display: flex;
@@ -236,19 +241,19 @@ export default {
         }
     }
     .uploadIcon2{
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
         .avatar-uploader-icon {
             font-size: 40px;
             color: #8c939d;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
             text-align: center;
         }
         .avatar {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             display: block;
         }
     }

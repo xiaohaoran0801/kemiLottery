@@ -23,7 +23,7 @@
                                 v-for="(ele,key) in item.children"
                                 :index="ele.permissionDesc"
                                 :key="key"
-                                @click="pushView(ele)"
+                                @click="pushView({name:ele.permissionName})"
                             >{{ele.permissionDesc}}</el-menu-item>
                         </el-menu-item-group>
                     </el-submenu>
@@ -87,7 +87,7 @@ export default {
     }
     #topBar {
         width: 100%;
-        height: 50px;
+        height: 40px;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -110,7 +110,7 @@ export default {
         right: 0;
         bottom: 0;
         left: 270px;
-        padding: 30px;
+        padding: 15px;
         box-sizing: border-box;
     }
     .content{

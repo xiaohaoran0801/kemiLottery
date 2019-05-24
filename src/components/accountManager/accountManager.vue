@@ -10,8 +10,10 @@
           </tr>
           <tr v-for="(item,index) in allUsers" :key="index">
             <td>{{item.username}}</td>
-            <td v-for="(ele,key) in item.roles" :key="key">
-              <span>{{ele}}</span>
+            <td>
+              <span v-for="(ele,key) in item.roles" :key="key">
+                <span>{{ele}} </span>
+              </span>
             </td>
             <td>
               <el-button type="primary" size="mini" @click="update(item)">编辑</el-button>
@@ -88,7 +90,7 @@ export default {
   },
   methods: {
     update(item) {
-      this.userInfo = item;
+      this.updateUserInfo = item;
       this.show = !this.show;
     },
     handleClose2() {

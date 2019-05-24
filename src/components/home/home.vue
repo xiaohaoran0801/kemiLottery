@@ -1,35 +1,7 @@
 <template>
   <div id="home">
     <div id="leftBar">
-        <div class="content">
-            <el-col id="leftNav">
-                <el-menu
-                    class="el-menu-vertical-demo"
-                    @open="handleOpen"
-                    @close="handleClose"
-                    background-color="#353636"
-                    text-color="#fff"
-                    active-text-color="#ffd04b">
-                    <el-submenu 
-                    v-for="(item,index) in list" 
-                    :index="item.permissionDesc" 
-                    :key="index">
-                        <template slot="title">
-                            <i class="el-icon-s-unfold"></i>
-                            <span>{{item.permissionDesc}}</span>
-                        </template>
-                        <el-menu-item-group>
-                            <el-menu-item 
-                                v-for="(ele,key) in item.children"
-                                :index="ele.permissionDesc"
-                                :key="key"
-                                @click="pushView({name:ele.permissionName})"
-                            >{{ele.permissionDesc}}</el-menu-item>
-                        </el-menu-item-group>
-                    </el-submenu>
-                </el-menu>
-            </el-col>
-        </div>
+        <navBar />
     </div>
     <div id="rightContent">
         <div id="topBar">
@@ -44,42 +16,15 @@
   </div>
 </template>
 <script>
+import navBar from './navbar'
 export default {
-  data() {
-    return {
-        data:[],
-    };
-  },
+  components:{navBar}, 
   methods: {
     logout() {
       localStorage.clear();
       this.$router.push({ name: "login" });
     },
-    handleOpen(key, keyPath) {
-        
-    },
-    handleClose(key,keyPath){
-    
-    }
   },
-  created() {
-      var permissions = permissions || this.response.permissions;
-        var length = permissions.length
-        for(let i=0;i<length;i++){
-            var parentId = permissions[i].parentid
-            if(parentId===0){
-                permissions[i].children = [];
-                this.list.push(permissions[i]);
-            }else{
-                for(var j=0;j<this.list.length;j++){
-                    var id = this.list[j]._id
-                    if(parentId === id){
-                        this.list[j].children.push(permissions[i])
-                    }
-                }
-            }
-        }
-  }
 };
 </script>
 <style lang="scss" scoped>

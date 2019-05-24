@@ -37,6 +37,7 @@ export default {
                     this.$http.post(this.$apis.signin,this.userInfo)
                     .then((resp)=>{
                         resp = resp.data
+                        console.log(resp)
                         var token = resp.token
                         localStorage.setItem("token",token);
                         var response = JSON.stringify(resp.response)
